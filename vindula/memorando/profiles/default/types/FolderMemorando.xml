@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<object name="FolderMemorando"
+        meta_type="Factory-based Type Information with dynamic views"
+        xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+ 
+ <!-- Basic metadata -->
+ <property name="title" i18n:translate="">FolderMemorando</property>
+ <property name="i18n_domain">vindula.memorando</property>
+ <property name="description" i18n:translate="">Pasta para inclusão de memorandos.</property>
+ <property name="content_icon">++resource++vindula.content.images/folder.gif</property>
+ <property name="content_meta_type">FolderMemorando</property>
+ <property name="product">vindula.memorando</property>
+ <property name="factory">addFolderMemorando</property>
+ <property name="immediate_view">folder_memorando_view</property>
+ <property name="allow_discussion">False</property>
+ <property name="global_allow">True</property>
+ 
+ <property name="allowed_content_types">
+ 	<element value="Memorando" />
+ </property>
+  	  
+ <property name="default_view">folder_memorando_view</property>
+ <property name="default_view_fallback">False</property> 
+ 
+ <alias from="edit" to="base_edit"/>
+ 
+ <alias from="(Default)" to="view"/>
+ <action title="View" 
+         action_id="view"
+         category="object" 
+         condition_expr=""
+         url_expr="string:${object_url}" 
+         visible="True">
+  <permission value="View"/>
+ </action>
+  
+ <action title="Edit" 
+         action_id="edit"
+         category="object" 
+         condition_expr=""
+         url_expr="string:${object_url}/edit" 
+         visible="True">
+  <permission value="Modify portal content"/>
+ </action>
+
+</object>
+

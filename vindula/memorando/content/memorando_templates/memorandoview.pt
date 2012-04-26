@@ -7,7 +7,7 @@
       i18n:domain="vindula.memorando">
 
 <body>
-<metal:main fill-slot="content">
+<metal:main fill-slot="content-core">
 		
 	<div id="interna" tal:define="memorando view/getMemorando">
 	   
@@ -25,9 +25,6 @@
 			</tr>
 			<tr><td>Data:</td>
 				<td tal:content="memorando/data"></td>
-			</tr>
-			<tr>
-				<h1 tal:content="memorando/titulo"></h1>
 			</tr>
 			
 			<tr>

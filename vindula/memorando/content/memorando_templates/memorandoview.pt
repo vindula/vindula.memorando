@@ -14,7 +14,6 @@
 		<p>Data: <span tal:content="memorando/data | nothing"></span> </p>
 		<p>Para: <span tal:content="memorando/para | nothing"></span> </p>
 		<p>De: <span tal:content="memorando/de | nothing"></span> </p>
-		<p>Assunto: <span tal:content="memorando/assunto | nothing"></span> </p>
 		<p>Arquivo anexado: <a tal:content="memorando/nome_arquivo | nothing"
 			                   tal:attributes="href memorando/anexo | nothing"></a></p>
 		

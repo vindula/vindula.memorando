@@ -54,15 +54,6 @@ Memorando_schema =  ATFolder.schema.copy() + Schema((
         required=False,
     ),
 
-    TextField(
-            name='subject',
-            widget=StringWidget(
-                label=_(u"Assunto"),
-                description=_(u"Assunto.",),
-            ),
-        required=False,
-    ),
-    
     FileField(
             name='attach',
             widget=FileWidget(
@@ -75,6 +66,10 @@ Memorando_schema =  ATFolder.schema.copy() + Schema((
 ))
 
 finalizeATCTSchema(Memorando_schema, folderish=False)
+invisivel = {'view':'invisible','edit':'invisible',}
+Memorando_schema['title'].widget.label = 'Assunto'
+Memorando_schema['description'].widget.visible = invisivel 
+
 
 class Memorando(ATFolder):
     """ Memorando Folder """
@@ -98,7 +93,8 @@ class Memorando(ATFolder):
         return L
 
 
-registerType(Memorando, PROJECTNAME) 
+registerType(Memorando, PROJECTNAME)
+
 
 class MemorandoView(grok.View):
     grok.context(IMemorando)
@@ -108,15 +104,14 @@ class MemorandoView(grok.View):
     def getMemorando(self):
         obj = self.context
         D = {}
-        D['titulo'] = obj.Title()
+        D['assunto'] = obj.Title()
         D['descricao'] = obj.Description()
         D['numero'] = obj.getNumber()
         D['data'] = obj.getDate().strftime('%d/%m/%Y')
         D['hora'] = obj.getDate().strftime('%h:%m')
         D['para'] = obj.getFrom()
         D['de'] = obj.getTo()
-        D['assunto'] = obj.getSubject()
         D['nome_arquivo'] = obj.getAttach().filename 
-        D['anexo'] = obj.getAttach().absolute_url() + '/download'
+        D['anexo'] = obj.getAttach().absolute_url()
         return D
 

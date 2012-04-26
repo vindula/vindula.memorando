@@ -7,16 +7,47 @@
       i18n:domain="vindula.memorando">
 
 <body>
-<metal:main fill-slot="content-core">
+<metal:main fill-slot="content">
 		
 	<div id="interna" tal:define="memorando view/getMemorando">
-		<p>Número: <span tal:content="memorando/numero | nothing"></span> </p>
-		<p>Data: <span tal:content="memorando/data | nothing"></span> </p>
-		<p>Para: <span tal:content="memorando/para | nothing"></span> </p>
-		<p>De: <span tal:content="memorando/de | nothing"></span> </p>
-		<p>Arquivo anexado: <a tal:content="memorando/nome_arquivo | nothing"
-			                   tal:attributes="href memorando/anexo | nothing"></a></p>
-		
+	   
+	   <div style="float:left;">
+			<img src="http://2.bp.blogspot.com/-DE_J6X89UR4/TcDJ2KnvG4I/AAAAAAAAA-E/6q5R30kxV18/s1600/minerva-UFRJ.jpg" width="120" height="150" />
+		</div>
+	   <div>
+	   		<h2>UNIVERSIDADE FEDERAL DO RIO DE JANEIRO</h2>
+			<h3>Casa da Ciência</h3>
+		</div>
+		<br /><br /><br /><br /><br />
+		<table border="1" width="100%">
+			<tr><td>Número</td>
+				<td tal:content="memorando/numero"></td>
+			</tr>
+			<tr><td>Data:</td>
+				<td tal:content="memorando/data"></td>
+			</tr>
+			<tr>
+				<h1 tal:content="memorando/titulo"></h1>
+			</tr>
+			
+			<tr>
+				<td>Para:</td><td tal:content="memorando/para | nothing"></td>
+			</tr>
+			<tr>
+				<td>De:</td><td tal:content="memorando/de | nothing"></td>
+			</tr>
+			<tr>
+				<td>Assunto:</td><td tal:content="memorando/assunto | nothing"></td>
+			</tr>
+			
+		</table>
+		<br />
+		<br />
+		<div tal:content="structure memorando/info"> </div>
+		<br />
+		<div>
+			<p>Arquivo anexado: <a tal:content="memorando/nome_arquivo | nothing" tal:attributes="href memorando/anexo"></a></p>
+		</div>	
 	</div>
 
 	

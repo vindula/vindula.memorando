@@ -53,6 +53,28 @@ Memorando_schema =  ATFolder.schema.copy() + Schema((
             ),
         required=False,
     ),
+    
+    TextField(
+            name='subject_memo',
+            widget=StringWidget(
+                label=_(u"Assunto"),
+                description=_(u"Assunto do Memorando.",),
+            ),
+        required=False,
+    ),
+                                                     
+    TextField(
+            name='info_memo',
+            default_content_type = 'text/restructured',
+            default_output_type = 'text/x-html-safe',
+            widget=RichWidget(
+                label=_(u"Informações"),
+                description=_(u"Insira as informações do Memorando."),
+                rows="10",
+            ),
+            required=False,
+    ),
+                                                 
 
     FileField(
             name='attach',
@@ -67,7 +89,6 @@ Memorando_schema =  ATFolder.schema.copy() + Schema((
 
 finalizeATCTSchema(Memorando_schema, folderish=False)
 invisivel = {'view':'invisible','edit':'invisible',}
-Memorando_schema['title'].widget.label = 'Assunto'
 Memorando_schema['description'].widget.visible = invisivel 
 
 
@@ -104,7 +125,8 @@ class MemorandoView(grok.View):
     def getMemorando(self):
         obj = self.context
         D = {}
-        D['assunto'] = obj.Title()
+        D['titulo'] = obj.Title()
+        D['assunto'] = obj.getSubject_memo()
         D['descricao'] = obj.Description()
         D['numero'] = obj.getNumber()
         D['data'] = obj.getDate().strftime('%d/%m/%Y')
@@ -113,5 +135,6 @@ class MemorandoView(grok.View):
         D['de'] = obj.getTo()
         D['nome_arquivo'] = obj.getAttach().filename 
         D['anexo'] = obj.getAttach().absolute_url()
+        D['info'] = obj.getInfo_memo()
         return D
 

@@ -1,0 +1,26 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      metal:use-macro="context/main_template/macros/master"
+      i18n:domain="vindula.memorando">
+
+<body>
+<metal:main fill-slot="content-core">
+		
+	<div id="interna" tal:define="memorando view/getMemorando">
+		<p>Número: <span tal:content="memorando/numero | nothing"></span> </p>
+		<p>Data: <span tal:content="memorando/data | nothing"></span> </p>
+		<p>Para: <span tal:content="memorando/para | nothing"></span> </p>
+		<p>De: <span tal:content="memorando/de | nothing"></span> </p>
+		<p>Assunto: <span tal:content="memorando/assunto | nothing"></span> </p>
+		<p>Arquivo anexado: <a tal:content="memorando/nome_arquivo | nothing"
+			                   tal:attributes="href memorando/anexo | nothing"></a></p>
+		
+	</div>
+
+	
+</metal:main>
+</body>
+</html>		

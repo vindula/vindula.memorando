@@ -4,21 +4,4 @@
     i18n_domain="vindula.memorando">
 
   <include package="plone.app.contentmenu" />
- 
-  <browser:page
-        for="*"
-        name="folder_memorando_view"
-        class=".folder_view.FolderMemorandoView"
-        permission="zope2.View"
-        allowed_interface=".interfaces.IFolderMemorando"
-        />
-        
-  <browser:page
-     for="*"
-     name="memorando_view"
-     class=".memorando_view.MemorandoView"
-     permission="zope2.View"
-     allowed_interface=".interfaces.IMemorando"
-    />
-
 </configure>

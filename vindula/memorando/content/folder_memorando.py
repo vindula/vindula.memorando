@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from five import grok
+from Products.CMFCore.utils import getToolByName
 from vindula.memorando import MessageFactory as _
 from vindula.memorando.interfaces.interfaces import IFolderMemorando
 from Products.ATContentTypes.content.folder import ATFolder
@@ -32,4 +33,23 @@ class FolderMemorando(ATFolder):
 
 registerType(FolderMemorando, PROJECTNAME) 
 
-
+class FolderMemorandoView(grok.View):
+    grok.context(IFolderMemorando)
+    grok.require('zope2.View')
+    grok.name('folder_memorando_view')
+    
+    def getMemorandos(self):
+        pc = getToolByName(self.context,'portal_catalog')
+        memorandos = pc(     portal_type='Memorando',
+                             review_state="published",
+                             sort_on='getObjPositionInParent',)
+        L = []
+        if memorandos:
+            for memorando in memorandos:
+                D = {}
+                D['titulo'] = memorando.Title
+                D['url'] = memorando.getObject().absolute_url()
+                L.append(D)
+        return L
+                
+    

@@ -35,7 +35,7 @@ Memorando_schema =  ATFolder.schema.copy() + Schema((
     ),
 
     StringField(
-            name='para',
+            name='from',
             widget=SelectionWidget(
                 label=_(u"Para:"),
                 description=_("Selecione o usuário que deseja enviar o memorando."),
@@ -46,7 +46,7 @@ Memorando_schema =  ATFolder.schema.copy() + Schema((
     ),
     
     TextField(
-            name='de',
+            name='to',
             widget=StringWidget(
                 label=_(u"De"),
                 description=_(u"Destinatario.",),
@@ -55,7 +55,7 @@ Memorando_schema =  ATFolder.schema.copy() + Schema((
     ),
 
     TextField(
-            name='assunto',
+            name='subject',
             widget=StringWidget(
                 label=_(u"Assunto"),
                 description=_(u"Assunto.",),
@@ -64,7 +64,7 @@ Memorando_schema =  ATFolder.schema.copy() + Schema((
     ),
     
     FileField(
-            name='anexo',
+            name='attach',
             widget=FileWidget(
                 label=_(u"Anexo"),
                 description=_(u"anexe o memorando.",),
@@ -103,6 +103,20 @@ registerType(Memorando, PROJECTNAME)
 class MemorandoView(grok.View):
     grok.context(IMemorando)
     grok.require('zope2.View')
-    grok.name('view')
+    grok.name('memorando_view')
     
+    def getMemorando(self):
+        obj = self.context
+        D = {}
+        D['titulo'] = obj.Title()
+        D['descricao'] = obj.Description()
+        D['numero'] = obj.getNumber()
+        D['data'] = obj.getDate().strftime('%d/%m/%Y')
+        D['hora'] = obj.getDate().strftime('%h:%m')
+        D['para'] = obj.getFrom()
+        D['de'] = obj.getTo()
+        D['assunto'] = obj.getSubject()
+        D['nome_arquivo'] = obj.getAttach().filename 
+        D['anexo'] = obj.getAttach().absolute_url() + '/download'
+        return D
 

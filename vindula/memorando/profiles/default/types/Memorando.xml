@@ -21,7 +21,7 @@
  
  <alias from="edit" to="base_edit"/>
  
- <alias from="(Default)" to="view"/>
+ <alias from="(Default)" to="memorando_view"/>
  <action title="View" 
          action_id="view"
          category="object" 

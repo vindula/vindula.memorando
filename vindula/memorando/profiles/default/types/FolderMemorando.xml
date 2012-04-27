@@ -7,7 +7,7 @@
  <property name="title" i18n:translate="">FolderMemorando</property>
  <property name="i18n_domain">vindula.memorando</property>
  <property name="description" i18n:translate="">Pasta para inclusão de memorandos.</property>
- <property name="content_icon">++resource++vindula.content.images/folder.gif</property>
+ <property name="content_icon">++resource++vindula.memorando/icons/Folder-icon.png</property>
  <property name="content_meta_type">FolderMemorando</property>
  <property name="product">vindula.memorando</property>
  <property name="factory">addFolderMemorando</property>

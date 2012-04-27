@@ -7,7 +7,7 @@
  <property name="title" i18n:translate="">Memorando</property>
  <property name="i18n_domain">vindula.memorando</property>
  <property name="description" i18n:translate="">Objeto para criação de memorandos.</property>
- <property name="content_icon">++resource++vindula.content.images/file_icon.gif</property>
+ <property name="content_icon">++resource++vindula.memorando/icons/Memo-icon.png</property>
  <property name="content_meta_type">Memorando</property>
  <property name="product">vindula.memorando</property>
  <property name="factory">addMemorando</property>

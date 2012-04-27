@@ -13,8 +13,11 @@
   <include package=".content" />
   <include package=".portlets" />
   
+  
   <!-- Grok the package to initialise schema interfaces and content classes -->
   <grok:grok package="." />
+  
+  <i18n:registerTranslations directory="locales" />
   	
   <!-- Register the installation GenericSetup extension profile -->
   <genericsetup:registerProfile

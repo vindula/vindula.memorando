@@ -151,6 +151,7 @@ Memorando_schema =  ATFolder.schema.copy() + Schema((
 ))
 
 finalizeATCTSchema(Memorando_schema, folderish=False)
+
 invisivel = {'view':'invisible','edit':'invisible',}
 Memorando_schema['description'].widget.visible = invisivel 
 
@@ -214,6 +215,42 @@ class MemorandoView(grok.View):
         D['info'] = obj.getInfo_memo()
         return D
     
+    def geraHtmlMail(self):
+        dict = self.getMemorando()
+        ano = self.getAno()
+        html = '<div id="content-fundo" style="background-color: #FFF !important;">\
+                    <div id="image" style="float:left;margin:0px 10px 10px 10px;">\
+                        <img src="%s" width="120" height="150" />\
+                    </div>\
+                    <div>\
+                        <h2 style="color:#6D6D6D; padding:10px 0px 0px 0px !important;">%s</h2>\
+                        <h3 style="color:#6D6D6D;">%s</h3>\
+                    </div>\
+                    <br /><br /><br /><br /><br />\
+                    <table border="1" width="100%%">\
+                        <tr>\
+                            <td>Número</td><td>%s/%s</td>\
+                        </tr>\
+                        <tr>\
+                            <td>Data:</td>\
+                            <td>%s</td>\
+                        </tr>\
+                        <tr>\
+                            <td>Para:</td><td>%s</td>\
+                        </tr>\
+                        <tr>\
+                            <td>De:</td><td>%s</td>\
+                        </tr>\
+                        <tr>\
+                            <td>Assunto:</td><td>%s</td>\
+                        </tr>\
+                    </table>\
+                    <br /><br />\
+                    <div>%s</div>\
+                </div>' % (dict['imagem'],dict['cabecalho_um'],dict['cabecalho_dois'],dict['numero'],ano,\
+                             dict['data'],dict['para'],dict['de'],dict['assunto'],dict['info'])
+        return html    
+    
     def envia_email(self):
         obj = self.context
         # Cria a mensagem raiz, configurando os campos necessarios para envio da mensagem.
@@ -222,7 +259,7 @@ class MemorandoView(grok.View):
         mensagem['From'] = obj.getEmail_from()
         mensagem['To'] = obj.getEmail_to()
         mensagem.preamble = 'This is a multi-part message in MIME format.'
-        mensagem.attach(MIMEText(obj.getInfo_memo(), 'html', 'utf-8'))
+        mensagem.attach(MIMEText(self.geraHtmlMail(), 'html', 'utf-8'))
         
         # Atacha os arquivos
         if obj.getAttach().data != '':
@@ -264,7 +301,7 @@ class MemorandoView(grok.View):
         submitted = form.get('form.submitted', False)
         if submitted:
             self.envia_email()
-            IStatusMessage(self.request).addStatusMessage(_(u'E-Mail enviado com sucesso.'),"warning") 
+            IStatusMessage(self.request).addStatusMessage(_(u'E-mail enviado com sucesso.'),"warning") 
         else:
             return None
         

@@ -9,19 +9,20 @@
 <body>
 <metal:main fill-slot="content-core">
 		
-	<div id="interna" tal:define="memorando view/getMemorando">
+	<div id="interna" tal:define="memorando view/getMemorando;
+								  ano view/getAno">
 	   
 	   <div style="float:left;">
-			<img src="http://2.bp.blogspot.com/-DE_J6X89UR4/TcDJ2KnvG4I/AAAAAAAAA-E/6q5R30kxV18/s1600/minerva-UFRJ.jpg" width="120" height="150" />
+			<img tal:attributes="src memorando/imagem" width="120" height="150" />
 		</div>
 	   <div>
-	   		<h2>UNIVERSIDADE FEDERAL DO RIO DE JANEIRO</h2>
-			<h3>Casa da Ciência</h3>
+	   		<h2 tal:content="memorando/cabecalho_um">UNIVERSIDADE FEDERAL DO RIO DE JANEIRO</h2>
+			<h3 tal:content="memorando/cabecalho_dois">Casa da Ciência</h3>
 		</div>
 		<br /><br /><br /><br /><br />
 		<table border="1" width="100%">
 			<tr><td>Número</td>
-				<td tal:content="memorando/numero"></td>
+				<td tal:content="string: ${memorando/numero}/${ano}"></td>
 			</tr>
 			<tr><td>Data:</td>
 				<td tal:content="memorando/data"></td>
@@ -46,6 +47,12 @@
 			<p>Arquivo anexado: <a tal:content="memorando/nome_arquivo | nothing" tal:attributes="href memorando/anexo"></a></p>
 		</div>	
 	</div>
+
+	<form method="post" tal:attributes="action string: ${context/absolute_url}">
+		<input type="hidden" name="form.submitted:boolean" value="True" />
+		<input type="submit" name="enviar_email" value="Enviar E-mail" />
+	</form>
+	
 
 	
 </metal:main>

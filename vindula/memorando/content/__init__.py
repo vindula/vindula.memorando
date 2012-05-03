@@ -1,3 +1,3 @@
-#
+#-*- coding:utf-8 -*-
 import memorando
-import folder_memorando
+import memorandos

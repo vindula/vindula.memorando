@@ -35,7 +35,7 @@
 				<td>De:</td><td tal:content="memorando/de | nothing"></td>
 			</tr>
 			<tr>
-				<td>Assunto:</td><td tal:content="memorando/assunto | nothing"></td>
+				<td>Assunto:</td><td tal:content="memorando/titulo | nothing"></td>
 			</tr>
 			
 		</table>

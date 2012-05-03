@@ -2,11 +2,14 @@
 from five import grok
 from vindula.memorando import MessageFactory as _
 from vindula.memorando.interfaces.interfaces import IMemorando
+from vindula.myvindula.user import ModelsFuncDetails
 
+from Products.CMFCore.utils import getToolByName
 from Products.ATContentTypes.content.folder import ATFolder
 from Products.statusmessages.interfaces import IStatusMessage
 from Products.ATContentTypes.content.schemata import finalizeATCTSchema
 from Products.Archetypes.atapi import *
+
 
 from zope.app.component.hooks import getSite
 
@@ -29,35 +32,7 @@ from vindula.memorando.config import *
 
 
 Memorando_schema =  ATFolder.schema.copy() + Schema((
-
-    ImageField(
-            name='image_memo',
-            widget=ImageWidget(
-                label=_(u"Imagem"),
-                description=_(u"Imagem do Memorando.",),
-            ),
-        required=False,
-    ),
     
-    TextField(
-            name='head_one',
-            widget=StringWidget(
-                label=_(u"Cabeçalho"),
-                description=_("Insira o texto a ser adicionado no cabeçalho do Memorando.",),
-                size = 50,
-            ),
-        required=False,
-    ),
-    
-    TextField(
-            name='head_two',
-            widget=StringWidget(
-                label=_(u"Sub Cabeçalho"),
-                description=_(u"Insira o texto a ser adicionado no abaixo do cabeçalho do Memorando.",),
-            ),
-        required=False,
-    ),                                            
-                                                     
     TextField(
             name='number',
             widget=IntegerWidget(
@@ -114,18 +89,9 @@ Memorando_schema =  ATFolder.schema.copy() + Schema((
                 description=_(u"Informe o seu e-mail",),
             ),
         required=False,
-        validators = ('isEmail')
+        validators = ('isEmail'),
     ),
     
-    TextField(
-            name='subject_memo',
-            widget=StringWidget(
-                label=_(u"Assunto"),
-                description=_(u"Assunto do Memorando.",),
-            ),
-        required=False,
-    ),
-                                                     
     TextField(
             name='info_memo',
             default_content_type = 'text/restructured',
@@ -153,7 +119,9 @@ Memorando_schema =  ATFolder.schema.copy() + Schema((
 finalizeATCTSchema(Memorando_schema, folderish=False)
 
 invisivel = {'view':'invisible','edit':'invisible',}
-Memorando_schema['description'].widget.visible = invisivel 
+Memorando_schema['description'].widget.visible = invisivel
+Memorando_schema['email_from'].default_method = 'getEmailUser'
+Memorando_schema['from'].default_method = 'getUser' 
 
 
 class Memorando(ATFolder):
@@ -169,14 +137,29 @@ class Memorando(ATFolder):
         return DateTime() 
     
     def voc_users(self):
-        users = self.portal_membership.listMembers()
-        L = []
-        if users:
+        users = ModelsFuncDetails().get_allFuncDetails()
+        email = self.getEmail_to()
+        if email == '':
+            value = 'usuario_fora_intranet'
+        else:
+            value = email
+        L = [(value,'Usuário fora da Intranet')]
+        result = ''
+        
+        if users is not None:
             for user in users:
-                L.append(user.id)
-
+                member_id = user.email
+                member_name = user.name or member_id
+                L.append((member_id, unicode(member_name)))
+            result = DisplayList((L))
         return L
-
+    
+    def getEmailUser(self):
+        email = self.portal_membership.getAuthenticatedMember().email
+        return email
+    def getUser(self):
+        user = self.portal_membership.getAuthenticatedMember().fullname
+        return user
 
 registerType(Memorando, PROJECTNAME)
 
@@ -191,28 +174,41 @@ class MemorandoView(grok.View):
         return ano
     
     def getMemorando(self):
-        obj = self.context
-        D = {}
-        D['titulo'] = obj.Title()
-        if obj.getImage_memo() == '':
-            D['imagem'] = ''
-        else:
-            D['imagem'] = obj.getImage_memo().absolute_url() + '/image_memo'
-        D['cabecalho_um'] = obj.getHead_one()
-        D['cabecalho_dois'] = obj.getHead_two()
-        D['assunto'] = obj.getSubject_memo()
-        D['descricao'] = obj.Description()
-        D['numero'] = obj.getNumber()
-        D['data'] = obj.getDate().strftime('%d/%m/%Y')
-        D['hora'] = obj.getDate().strftime('%h:%m')
-        D['para'] = obj.getTo()
-        D['de'] = obj.getFrom()
-        if obj.getAttach() == '':
-            D['nome_arquivo'] = ''
-        else:
-            D['nome_arquivo'] = obj.getAttach().filename 
-        D['anexo'] = obj.getAttach().absolute_url()
-        D['info'] = obj.getInfo_memo()
+        pc = getToolByName(self.context,'portal_catalog')
+        memorandos = pc(  portal_type='Memorandos',
+                          review_state="published",
+                          path = {'query': '/'.join(self.context.aq_parent.getPhysicalPath())
+                                  } 
+                          )
+        if memorandos:
+            for memorando in memorandos:
+                memorando_obj = memorando.getObject()
+                obj = self.context
+                D = {}
+                D['titulo'] = obj.Title()
+                if memorando_obj.getImage_memo() == '':
+                    D['imagem'] = ''
+                else:
+                    D['imagem'] = memorando_obj.getImage_memo().absolute_url() + '/image_memo'
+                    D['binario_imagem'] = memorando_obj.getImage_memo().data.data
+                    D['nome_imagem'] = memorando_obj.getImage_memo().filename
+                D['cabecalho_um'] = memorando_obj.getHead_one()
+                D['cabecalho_dois'] = memorando_obj.getHead_two()
+                D['descricao'] = obj.Description()
+                D['numero'] = obj.getNumber()
+                D['data'] = obj.getDate().strftime('%d/%m/%Y')
+                D['hora'] = obj.getDate().strftime('%h:%m')
+                if obj.getTo() == 'usuario_fora_intranet':
+                    D['para'] = obj.getEmail_to()
+                else:
+                    D['para'] = obj.getTo()
+                D['de'] = obj.getFrom()
+                if obj.getAttach() == '':
+                    D['nome_arquivo'] = ''
+                else:
+                    D['nome_arquivo'] = obj.getAttach().filename 
+                D['anexo'] = obj.getAttach().absolute_url()
+                D['info'] = obj.getInfo_memo()
         return D
     
     def geraHtmlMail(self):
@@ -220,7 +216,7 @@ class MemorandoView(grok.View):
         ano = self.getAno()
         html = '<div id="content-fundo" style="background-color: #FFF !important;">\
                     <div id="image" style="float:left;margin:0px 10px 10px 10px;">\
-                        <img src="%s" width="120" height="150" />\
+                        <img src="cid:image1" width="120" height="150" />\
                     </div>\
                     <div>\
                         <h2 style="color:#6D6D6D; padding:10px 0px 0px 0px !important;">%s</h2>\
@@ -247,27 +243,35 @@ class MemorandoView(grok.View):
                     </table>\
                     <br /><br />\
                     <div>%s</div>\
-                </div>' % (dict['imagem'],dict['cabecalho_um'],dict['cabecalho_dois'],dict['numero'],ano,\
-                             dict['data'],dict['para'],dict['de'],dict['assunto'],dict['info'])
+                </div>' % (dict['cabecalho_um'],dict['cabecalho_dois'],dict['numero'],ano,\
+                             dict['data'],dict['para'],dict['de'],dict['titulo'],dict['info'])
         return html    
     
     def envia_email(self):
+        memorando_obj = self.getMemorando()
         obj = self.context
         # Cria a mensagem raiz, configurando os campos necessarios para envio da mensagem.
         mensagem = MIMEMultipart('related')
-        mensagem['Subject'] = obj.subject_memo()
+        mensagem['Subject'] = obj.Title()
         mensagem['From'] = obj.getEmail_from()
-        mensagem['To'] = obj.getEmail_to()
+        mensagem['To'] = obj.getTo()
         mensagem.preamble = 'This is a multi-part message in MIME format.'
         mensagem.attach(MIMEText(self.geraHtmlMail(), 'html', 'utf-8'))
-        
         # Atacha os arquivos
+        if memorando_obj['imagem'] != '':
+            msgImage = MIMEImage(memorando_obj['binario_imagem'])
+            # Define the image's ID as referenced above
+            msgImage.add_header('Content-ID', '<image1>')
+            mensagem.attach(msgImage)
+            
         if obj.getAttach().data != '':
             parte = MIMEBase('application', 'octet-stream')
-            parte.set_payload(obj.getAttach().data.data)
+            try:
+                parte.set_payload(obj.getAttach().data.data)
+            except:
+                parte.set_payload(obj.getAttach().data)
             Encoders.encode_base64(parte)
             parte.add_header('Content-Disposition', 'attachment; filename="%s"' % obj.getAttach().filename)
-            
             mensagem.attach(parte)
         
         mail_de = mensagem['From']
@@ -293,6 +297,7 @@ class MemorandoView(grok.View):
                     
             smtp.sendmail(mail_de, mail_para, mensagem.as_string())
             smtp.quit()
+            print '------- Email enviado com sucesso -------'
         except:
             return False
 

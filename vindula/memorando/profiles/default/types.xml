@@ -11,7 +11,7 @@
 <object name="Memorando" 
   		meta_type="Factory-based Type Information with dynamic views"/>
 
-<object name="FolderMemorando" 
+<object name="Memorandos" 
   		meta_type="Factory-based Type Information with dynamic views"/>
 
 </object>

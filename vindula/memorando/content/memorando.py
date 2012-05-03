@@ -138,12 +138,7 @@ class Memorando(ATFolder):
     
     def voc_users(self):
         users = ModelsFuncDetails().get_allFuncDetails()
-        email = self.getEmail_to()
-        if email == '':
-            value = 'usuario_fora_intranet'
-        else:
-            value = email
-        L = [(value,'Usuário fora da Intranet')]
+        L = [('usuario_fora_intranet','Usuário fora da Intranet')]
         result = ''
         
         if users is not None:

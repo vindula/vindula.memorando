@@ -13,7 +13,7 @@
 								  ano view/getAno">
 	   
 	   <div style="float:left;">
-			<img tal:attributes="src memorando/imagem" width="120" height="150" />
+			<img tal:attributes="src memorando/imagem" width="120"  />
 		</div>
 	   <div>
 	   		<h2 tal:content="memorando/cabecalho_um">UNIVERSIDADE FEDERAL DO RIO DE JANEIRO</h2>

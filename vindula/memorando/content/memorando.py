@@ -216,7 +216,7 @@ class MemorandoView(grok.View):
         ano = self.getAno()
         html = '<div id="content-fundo" style="background-color: #FFF !important;">\
                     <div id="image" style="float:left;margin:0px 10px 10px 10px;">\
-                        <img src="cid:image1" width="120" height="150" />\
+                        <img src="cid:image1" width="120"  />\
                     </div>\
                     <div>\
                         <h2 style="color:#6D6D6D; padding:10px 0px 0px 0px !important;">%s</h2>\

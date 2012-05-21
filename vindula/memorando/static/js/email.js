@@ -1,9 +1,7 @@
 $j = jQuery.noConflict();
 
 function checkValue(val){
-	
 	if (val == 'usuario_fora_intranet') {
-	       alert(val)    
 		$j('#archetypes-fieldname-email_to').fadeIn('slow');
 		//$j('#email_to').val('');
 	}
@@ -12,7 +10,6 @@ function checkValue(val){
 		//$j('#email_to').val(val);
 		};
 	};
-
 
 $j(document).ready(function(){
 	var val = $j('#to').val();

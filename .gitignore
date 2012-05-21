@@ -1,4 +1,7 @@
 *.py[co]
+.project
+.pydevproject
+.settings/org.eclipse.core.resources.prefs
 
 # Packages
 *.egg

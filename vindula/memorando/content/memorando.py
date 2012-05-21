@@ -145,9 +145,10 @@ class Memorando(ATFolder):
             for user in users:
                 member_id = user.email
                 member_name = user.name or member_id
-                L.append((member_id, unicode(member_name)))
-            result = DisplayList((L))
-        return L
+                if member_id:
+                    L.append((member_id, unicode(member_name)))
+            
+        return DisplayList((L))
     
     def getEmailUser(self):
         email = self.portal_membership.getAuthenticatedMember().email
@@ -253,7 +254,13 @@ class MemorandoView(grok.View):
         mensagem = MIMEMultipart('related')
         mensagem['Subject'] = obj.Title()
         mensagem['From'] = obj.getEmail_from()
-        mensagem['To'] = obj.getTo()
+        to = obj.getTo()
+         
+        if to == 'usuario_fora_intranet':
+            mensagem['To'] = obj.getEmail_to()
+        else:
+            mensagem['To'] = to
+        
         mensagem.preamble = 'This is a multi-part message in MIME format.'
         mensagem.attach(MIMEText(self.geraHtmlMail(), 'html', 'utf-8'))
         # Atacha os arquivos

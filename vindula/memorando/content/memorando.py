@@ -175,17 +175,21 @@ class MemorandoView(grok.View):
                           path = {'query': '/'.join(self.context.aq_parent.getPhysicalPath())
                                   } 
                           )
+        D = {}
         if memorandos:
             for memorando in memorandos:
                 memorando_obj = memorando.getObject()
                 obj = self.context
-                D = {}
+                
                 D['titulo'] = obj.Title()
                 if memorando_obj.getImage_memo() == '':
                     D['imagem'] = ''
                 else:
                     D['imagem'] = memorando_obj.getImage_memo().absolute_url() + '/image_memo'
-                    D['binario_imagem'] = memorando_obj.getImage_memo().data.data
+                    try:
+                        D['binario_imagem'] = memorando_obj.getImage_memo().data.data
+                    except:
+                        D['binario_imagem'] = memorando_obj.getImage_memo().data
                     D['nome_imagem'] = memorando_obj.getImage_memo().filename
                 D['cabecalho_um'] = memorando_obj.getHead_one()
                 D['cabecalho_dois'] = memorando_obj.getHead_two()

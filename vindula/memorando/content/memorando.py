@@ -2,7 +2,8 @@
 from five import grok
 from vindula.memorando import MessageFactory as _
 from vindula.memorando.interfaces.interfaces import IMemorando
-from vindula.myvindula.user import ModelsFuncDetails
+
+from vindula.myvindula.models.instance_funcdetail import ModelsInstanceFuncdetails
 
 from Products.CMFCore.utils import getToolByName
 from Products.ATContentTypes.content.folder import ATFolder
@@ -137,14 +138,15 @@ class Memorando(ATFolder):
         return DateTime() 
     
     def voc_users(self):
-        users = ModelsFuncDetails().get_allFuncDetails()
+        # users = ModelsFuncDetails().get_allFuncDetails()
+        users = ModelsInstanceFuncdetails().get_AllFuncDetails()
         L = [('usuario_fora_intranet','Usuário fora da Intranet')]
         result = ''
         
         if users is not None:
             for user in users:
-                member_id = user.email
-                member_name = user.name or member_id
+                member_id = user.get('email','')
+                member_name = user.get('name') or member_id
                 if member_id:
                     L.append((member_id, unicode(member_name)))
             

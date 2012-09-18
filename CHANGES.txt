@@ -6,3 +6,7 @@ Changelog
 
 - Created recipe with ZopeSkel
   [""]
+
+1.1.1 - 2012-09-18
+-------------------------
+- Correções do ticket #158 - Memorandos

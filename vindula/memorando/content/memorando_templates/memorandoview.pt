@@ -13,19 +13,20 @@
 								  ano view/getAno">
 	   
 	   <div style="float:left;">
-			<img tal:attributes="src memorando/imagem" width="120"  />
+			<img tal:condition="memorando/imagem|nothing"
+			     tal:attributes="src memorando/imagem" width="120"  />
 		</div>
 	   <div>
-	   		<h2 tal:content="memorando/cabecalho_um">UNIVERSIDADE FEDERAL DO RIO DE JANEIRO</h2>
-			<h3 tal:content="memorando/cabecalho_dois">Casa da Ciência</h3>
+	   		<h2 tal:content="memorando/cabecalho_um|nothing">UNIVERSIDADE FEDERAL DO RIO DE JANEIRO</h2>
+			<h3 tal:content="memorando/cabecalho_dois|nothing">Casa da Ciência</h3>
 		</div>
 		<br /><br /><br /><br /><br />
 		<table border="1" width="100%">
 			<tr><td>Número</td>
-				<td tal:content="string: ${memorando/numero}/${ano}"></td>
+				<td tal:content="string: ${memorando/numero|nothing}/${ano}"></td>
 			</tr>
 			<tr><td>Data:</td>
-				<td tal:content="memorando/data"></td>
+				<td tal:content="memorando/data|nothing"></td>
 			</tr>
 			
 			<tr>
@@ -41,9 +42,9 @@
 		</table>
 		<br />
 		<br />
-		<div tal:content="structure memorando/info"> </div>
+		<div tal:content="structure memorando/info|nothing"> </div>
 		<br />
-		<div>
+		<div tal:condition="memorando/anexo|nothing">
 			<p>Arquivo anexado: <a tal:content="memorando/nome_arquivo | nothing" tal:attributes="href memorando/anexo"></a></p>
 		</div>	
 	</div>

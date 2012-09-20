@@ -30,13 +30,13 @@
 			</tr>
 			
 			<tr>
-				<td>Para:</td><td tal:content="memorando/para | nothing"></td>
+				<td>Para:</td><td tal:content="memorando/para|nothing"></td>
 			</tr>
 			<tr>
-				<td>De:</td><td tal:content="memorando/de | nothing"></td>
+				<td>De:</td><td tal:content="memorando/de|nothing"></td>
 			</tr>
 			<tr>
-				<td>Assunto:</td><td tal:content="memorando/titulo | nothing"></td>
+				<td>Assunto:</td><td tal:content="memorando/titulo|nothing"></td>
 			</tr>
 			
 		</table>
@@ -45,7 +45,7 @@
 		<div tal:content="structure memorando/info|nothing"> </div>
 		<br />
 		<div tal:condition="memorando/anexo|nothing">
-			<p>Arquivo anexado: <a tal:content="memorando/nome_arquivo | nothing" tal:attributes="href memorando/anexo"></a></p>
+			<p>Arquivo anexado: <a tal:content="memorando/nome_arquivo|nothing" tal:attributes="href memorando/anexo"></a></p>
 		</div>	
 	</div>
 

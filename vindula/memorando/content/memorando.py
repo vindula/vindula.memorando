@@ -172,45 +172,46 @@ class MemorandoView(grok.View):
         return ano
     
     def getMemorando(self):
-        pc = getToolByName(self.context,'portal_catalog')
-        memorandos = pc(  portal_type='Memorandos',
-                          review_state="published",
-                          path = {'query': '/'.join(self.context.aq_parent.getPhysicalPath())
-                                  } 
-                          )
         D = {}
-        if memorandos:
-            for memorando in memorandos:
-                memorando_obj = memorando.getObject()
-                obj = self.context
-                
-                D['titulo'] = obj.Title()
-                if memorando_obj.getImage_memo() == '':
-                    D['imagem'] = ''
-                else:
-                    D['imagem'] = memorando_obj.getImage_memo().absolute_url() + '/image_memo'
-                    try:
-                        D['binario_imagem'] = memorando_obj.getImage_memo().data.data
-                    except:
-                        D['binario_imagem'] = memorando_obj.getImage_memo().data
-                    D['nome_imagem'] = memorando_obj.getImage_memo().filename
-                D['cabecalho_um'] = memorando_obj.getHead_one()
-                D['cabecalho_dois'] = memorando_obj.getHead_two()
-                D['descricao'] = obj.Description()
-                D['numero'] = obj.getNumber()
-                D['data'] = obj.getDate().strftime('%d/%m/%Y')
-                D['hora'] = obj.getDate().strftime('%h:%m')
-                if obj.getTo() == 'usuario_fora_intranet':
-                    D['para'] = obj.getEmail_to()
-                else:
-                    D['para'] = obj.getTo()
-                D['de'] = obj.getFrom()
-                if obj.getAttach() == '':
-                    D['nome_arquivo'] = ''
-                else:
-                    D['nome_arquivo'] = obj.getAttach().filename 
-                D['anexo'] = obj.getAttach().absolute_url()
-                D['info'] = obj.getInfo_memo()
+#        pc = getToolByName(self.context,'portal_catalog')
+#        memorandos = pc(  portal_type='Memorandos',
+#                          review_state="published",
+#                          path = {'query': '/'.join(self.context.aq_parent.getPhysicalPath())
+#                                  } 
+#                          )
+#        D = {}
+#        if memorandos:
+            #for memorando in memorandos:
+        memorando_obj = self.context.aq_parent
+        obj = self.context
+        
+        D['titulo'] = obj.Title()
+        if memorando_obj.getImage_memo() == '':
+            D['imagem'] = ''
+        else:
+            D['imagem'] = memorando_obj.getImage_memo().absolute_url() + '/image_memo'
+            try:
+                D['binario_imagem'] = memorando_obj.getImage_memo().data.data
+            except:
+                D['binario_imagem'] = memorando_obj.getImage_memo().data
+            D['nome_imagem'] = memorando_obj.getImage_memo().filename
+        D['cabecalho_um'] = memorando_obj.getHead_one()
+        D['cabecalho_dois'] = memorando_obj.getHead_two()
+        D['descricao'] = obj.Description()
+        D['numero'] = obj.getNumber()
+        D['data'] = obj.getDate().strftime('%d/%m/%Y')
+        D['hora'] = obj.getDate().strftime('%h:%m')
+        if obj.getTo() == 'usuario_fora_intranet':
+            D['para'] = obj.getEmail_to()
+        else:
+            D['para'] = obj.getTo()
+        D['de'] = obj.getFrom()
+        if obj.getAttach() == '':
+            D['nome_arquivo'] = ''
+        else:
+            D['nome_arquivo'] = obj.getAttach().filename 
+        D['anexo'] = obj.getAttach().absolute_url()
+        D['info'] = obj.getInfo_memo()
         return D
     
     def geraHtmlMail(self):

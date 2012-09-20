@@ -67,11 +67,9 @@ class MemorandosView(grok.View):
     
     def getMemorandos(self):
         pc = getToolByName(self.context,'portal_catalog')
-        memorandos = pc(  portal_type='Memorando',
-                          review_state="published",
-                          sort_on='getObjPositionInParent',
-                          path = {'query': '/'.join(self.context.getPhysicalPath())
-                                  }
+        memorandos = pc(portal_type='Memorando',
+                        sort_on='getObjPositionInParent',
+                        path = {'query': '/'.join(self.context.getPhysicalPath())}
                         )
         L = []
         if memorandos:

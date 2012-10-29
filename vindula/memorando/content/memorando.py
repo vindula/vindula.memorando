@@ -95,7 +95,7 @@ Memorando_schema =  ATFolder.schema.copy() + Schema((
     
     TextField(
             name='info_memo',
-            default_content_type = 'text/restructured',
+            default_content_type = 'text/html',
             default_output_type = 'text/x-html-safe',
             widget=RichWidget(
                 label=_(u"Informações"),
@@ -153,10 +153,13 @@ class Memorando(ATFolder):
         return DisplayList((L))
     
     def getEmailUser(self):
-        email = self.portal_membership.getAuthenticatedMember().email
+        obj_user = self.portal_membership.getAuthenticatedMember()
+        email = obj_user.getProperty('email')
         return email
+    
     def getUser(self):
-        user = self.portal_membership.getAuthenticatedMember().fullname
+        obj_user = self.portal_membership.getAuthenticatedMember() 
+        user = obj_user.getProperty('fullname')
         return user
 
 registerType(Memorando, PROJECTNAME)

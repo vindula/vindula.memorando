@@ -11,3 +11,8 @@ Changelog
 -------------------------
 - Correções do ticket #158 - Memorandos
 - Ajuste do ticket #158
+
+
+1.1.2 - 2012-10-29
+-------------------------
+- Correção no memorandos para não gerar objeto quebrado no plone

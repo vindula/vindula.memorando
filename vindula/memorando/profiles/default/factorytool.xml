@@ -10,5 +10,7 @@
 <object name="portal_factory" meta_type="Plone Factory Tool">
   <factorytypes>
     <!-- -*- extra stuff goes here -*- -->
+    <type portal_type="Memorando"/>
+    <type portal_type="Memorandos"/>
   </factorytypes>
 </object>

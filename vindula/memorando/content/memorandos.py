@@ -3,7 +3,8 @@ from five import grok
 from Products.CMFCore.utils import getToolByName
 from vindula.memorando import MessageFactory as _
 from vindula.memorando.interfaces.interfaces import IMemorandos
-from Products.ATContentTypes.content.folder import ATFolder
+
+from plone.app.folder.folder import ATFolder
 
 from AccessControl import ClassSecurityInfo
 

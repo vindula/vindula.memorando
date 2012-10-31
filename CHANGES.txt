@@ -16,3 +16,8 @@ Changelog
 1.1.2 - 2012-10-29
 -------------------------
 - Correção no memorandos para não gerar objeto quebrado no plone
+
+
+1.1.3 - 2012-10-31
+------------------------
+- Modificação do archetypes dos memorando e memorandos para não haver opção de blog 

@@ -6,7 +6,10 @@ from vindula.memorando.interfaces.interfaces import IMemorando
 from vindula.myvindula.models.instance_funcdetail import ModelsInstanceFuncdetails
 
 from Products.CMFCore.utils import getToolByName
-from Products.ATContentTypes.content.folder import ATFolder
+#from Products.ATContentTypes.content.folder import ATFolder
+
+from Products.ATContentTypes.content import schemata, base
+
 from Products.statusmessages.interfaces import IStatusMessage
 from Products.ATContentTypes.content.schemata import finalizeATCTSchema
 from Products.Archetypes.atapi import *
@@ -32,7 +35,7 @@ from archetypes.referencebrowserwidget.widget import ReferenceBrowserWidget
 from vindula.memorando.config import *
 
 
-Memorando_schema =  ATFolder.schema.copy() + Schema((
+Memorando_schema =  schemata.ATContentTypeSchema.copy() + Schema((
     
     TextField(
             name='number',
@@ -125,8 +128,8 @@ Memorando_schema['email_from'].default_method = 'getEmailUser'
 Memorando_schema['from'].default_method = 'getUser' 
 
 
-class Memorando(ATFolder):
-    """ Memorando Folder """
+class Memorando(base.ATCTContent):
+    """ Memorando """
     security = ClassSecurityInfo()
     
     implements(IMemorando)    

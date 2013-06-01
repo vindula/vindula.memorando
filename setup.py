@@ -68,3 +68,4 @@ setup(name='vindula.memorando',
       setup_requires=["PasteScript"],
       paster_plugins=["ZopeSkel"],
       )
+

@@ -3,7 +3,7 @@ from five import grok
 from vindula.memorando import MessageFactory as _
 from vindula.memorando.interfaces.interfaces import IMemorando
 
-from vindula.myvindula.models.instance_funcdetail import ModelsInstanceFuncdetails
+# from vindula.myvindula.models.instance_funcdetail import ModelsInstanceFuncdetails
 
 from Products.CMFCore.utils import getToolByName
 #from Products.ATContentTypes.content.folder import ATFolder
@@ -36,7 +36,7 @@ from vindula.memorando.config import *
 
 
 Memorando_schema =  schemata.ATContentTypeSchema.copy() + Schema((
-    
+
     TextField(
             name='number',
             widget=IntegerWidget(
@@ -46,7 +46,7 @@ Memorando_schema =  schemata.ATContentTypeSchema.copy() + Schema((
             ),
         required=False,
     ),
-                                                
+
     DateTimeField('date',
         searchable = 1,
         required = 0,
@@ -61,12 +61,12 @@ Memorando_schema =  schemata.ATContentTypeSchema.copy() + Schema((
             widget=SelectionWidget(
                 label=_(u"Para:"),
                 description=_("Selecione o usuário que deseja enviar o memorando."),
-                
+
             ),
             required=0,
             vocabulary='voc_users',
     ),
-    
+
     StringField(
             name='email_to',
             widget=StringWidget(
@@ -76,7 +76,7 @@ Memorando_schema =  schemata.ATContentTypeSchema.copy() + Schema((
         required=False,
         validators = ('isEmail')
     ),
-    
+
     TextField(
             name='from',
             widget=StringWidget(
@@ -85,7 +85,7 @@ Memorando_schema =  schemata.ATContentTypeSchema.copy() + Schema((
             ),
         required=False,
     ),
-    
+
     TextField(
             name='email_from',
             widget=StringWidget(
@@ -95,7 +95,7 @@ Memorando_schema =  schemata.ATContentTypeSchema.copy() + Schema((
         required=False,
         validators = ('isEmail'),
     ),
-    
+
     TextField(
             name='info_memo',
             default_content_type = 'text/html',
@@ -107,7 +107,7 @@ Memorando_schema =  schemata.ATContentTypeSchema.copy() + Schema((
             ),
             required=False,
     ),
-                                                 
+
 
     FileField(
             name='attach',
@@ -125,43 +125,43 @@ finalizeATCTSchema(Memorando_schema, folderish=False)
 invisivel = {'view':'invisible','edit':'invisible',}
 Memorando_schema['description'].widget.visible = invisivel
 Memorando_schema['email_from'].default_method = 'getEmailUser'
-Memorando_schema['from'].default_method = 'getUser' 
+Memorando_schema['from'].default_method = 'getUser'
 
 
 class Memorando(base.ATCTContent):
     """ Memorando """
     security = ClassSecurityInfo()
-    
-    implements(IMemorando)    
+
+    implements(IMemorando)
     portal_type = 'Memorando'
     _at_rename_after_creation = True
     schema = Memorando_schema
 
     def getDefaultTime(self):
-        return DateTime() 
-    
+        return DateTime()
+
     def voc_users(self):
-        # users = ModelsFuncDetails().get_allFuncDetails()
-        users = ModelsInstanceFuncdetails().get_AllFuncDetails()
+
         L = [('usuario_fora_intranet','Usuário fora da Intranet')]
         result = ''
-        
-        if users is not None:
-            for user in users:
-                member_id = user.get('email','')
-                member_name = user.get('name') or member_id
-                if member_id:
-                    L.append((member_id, unicode(member_name)))
-            
+
+        # users = ModelsInstanceFuncdetails().get_AllFuncDetails()
+        # if users is not None:
+        #     for user in users:
+        #         member_id = user.get('email','')
+        #         member_name = user.get('name') or member_id
+        #         if member_id:
+        #             L.append((member_id, unicode(member_name)))
+
         return DisplayList((L))
-    
+
     def getEmailUser(self):
         obj_user = self.portal_membership.getAuthenticatedMember()
         email = obj_user.getProperty('email')
         return email
-    
+
     def getUser(self):
-        obj_user = self.portal_membership.getAuthenticatedMember() 
+        obj_user = self.portal_membership.getAuthenticatedMember()
         user = obj_user.getProperty('fullname')
         return user
 
@@ -172,25 +172,25 @@ class MemorandoView(grok.View):
     grok.context(IMemorando)
     grok.require('zope2.View')
     grok.name('memorando_view')
-    
+
     def getAno(self):
         ano = datetime.now().strftime('%Y')
         return ano
-    
+
     def getMemorando(self):
         D = {}
 #        pc = getToolByName(self.context,'portal_catalog')
 #        memorandos = pc(  portal_type='Memorandos',
 #                          review_state="published",
 #                          path = {'query': '/'.join(self.context.aq_parent.getPhysicalPath())
-#                                  } 
+#                                  }
 #                          )
 #        D = {}
 #        if memorandos:
             #for memorando in memorandos:
         memorando_obj = self.context.aq_parent
         obj = self.context
-        
+
         D['titulo'] = obj.Title()
         if memorando_obj.getImage_memo() == '':
             D['imagem'] = ''
@@ -215,11 +215,11 @@ class MemorandoView(grok.View):
         if obj.getAttach() == '':
             D['nome_arquivo'] = ''
         else:
-            D['nome_arquivo'] = obj.getAttach().filename 
+            D['nome_arquivo'] = obj.getAttach().filename
         D['anexo'] = obj.getAttach().absolute_url()
         D['info'] = obj.getInfo_memo()
         return D
-    
+
     def geraHtmlMail(self):
         dict = self.getMemorando()
         ano = self.getAno()
@@ -254,8 +254,8 @@ class MemorandoView(grok.View):
                     <div>%s</div>\
                 </div>' % (dict['cabecalho_um'],dict['cabecalho_dois'],dict['numero'],ano,\
                              dict['data'],dict['para'],dict['de'],dict['titulo'],dict['info'])
-        return html    
-    
+        return html
+
     def envia_email(self):
         memorando_obj = self.getMemorando()
         obj = self.context
@@ -264,12 +264,12 @@ class MemorandoView(grok.View):
         mensagem['Subject'] = obj.Title()
         mensagem['From'] = obj.getEmail_from()
         to = obj.getTo()
-         
+
         if to == 'usuario_fora_intranet':
             mensagem['To'] = obj.getEmail_to()
         else:
             mensagem['To'] = to
-        
+
         mensagem.preamble = 'This is a multi-part message in MIME format.'
         mensagem.attach(MIMEText(self.geraHtmlMail(), 'html', 'utf-8'))
         # Atacha os arquivos
@@ -278,7 +278,7 @@ class MemorandoView(grok.View):
             # Define the image's ID as referenced above
             msgImage.add_header('Content-ID', '<image1>')
             mensagem.attach(msgImage)
-            
+
         if obj.getAttach().data != '':
             parte = MIMEBase('application', 'octet-stream')
             try:
@@ -288,7 +288,7 @@ class MemorandoView(grok.View):
             Encoders.encode_base64(parte)
             parte.add_header('Content-Disposition', 'attachment; filename="%s"' % obj.getAttach().filename)
             mensagem.attach(parte)
-        
+
         mail_de = mensagem['From']
         mail_para = mensagem['To']
         #Pegando SmtpHost Padrão do Plone
@@ -309,7 +309,7 @@ class MemorandoView(grok.View):
                     smtp.login(smtp_userid, smtp_pass)
                 except:
                     smtp.login(smtp_userid, smtp_pass)
-                    
+
             smtp.sendmail(mail_de, mail_para, mensagem.as_string())
             smtp.quit()
             print '------- Email enviado com sucesso -------'
@@ -321,8 +321,8 @@ class MemorandoView(grok.View):
         submitted = form.get('form.submitted', False)
         if submitted:
             self.envia_email()
-            IStatusMessage(self.request).addStatusMessage(_(u'E-mail enviado com sucesso.'),"warning") 
+            IStatusMessage(self.request).addStatusMessage(_(u'E-mail enviado com sucesso.'),"warning")
         else:
             return None
-        
-        
+
+
